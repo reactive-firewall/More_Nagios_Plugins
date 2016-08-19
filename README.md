@@ -1,4 +1,5 @@
 # More_Nagios_Plugins
+<<<<<<< d223f50d421b7cec5348ababe64d1dcd766b2aaa
 Even More Nagios/Shinken/etc Plugins
 
 check_arp.py
@@ -74,3 +75,14 @@ optional arguments:
                         mode
   --size                units are in bytes used by files, cannot be combined
                         with count mode
+=======
+Even More Nagios Plugins
+========================
+
+License:
+- Apache 2.0 License for original work (i.e non-sub moduled)
+- sub-modules are referenced for connivence only, please see relevant sub-module's own project for details
+
+
+PROVIDED AS IS AND WITHOUT WARRANTY
+>>>>>>> very early commit ; more of a proof of concept code stash than a real commit

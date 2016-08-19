@@ -1,0 +1,3 @@
+[submodule "sam-weather"]
+	path = sam-weather
+	url = git@github.com:tuxthepenguin84/sam-weather.git
