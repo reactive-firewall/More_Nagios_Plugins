@@ -1,9 +1,8 @@
 # More_Nagios_Plugins
-<<<<<<< d223f50d421b7cec5348ababe64d1dcd766b2aaa
-Even More Nagios/Shinken/etc Plugins
+Even More Nagios/Shinken/Sensu/etc Monitoring Plugins
 
-check_arp.py
-
+#`check_arp.py`
+```plain
 goal: check for an arp entry
 
 usage: check_arp.py [-h] [-M MAC] -H HOST [-C | -U | --empty-ok]
@@ -17,7 +16,10 @@ optional arguments:
   -U, --empty-unknown   return unknown instead of warning on empty MAC
   --empty-ok            return ok on empty MAC instead, cannot be combined
                         with optionals
+```
+#`checkFileGroups.py`
 
+```plain
 goal: check for file count by group
 
 usage: checkFileGroups.py [-h] -S SEARCH -g GID [-c CRITICAL] [-w WARNING]
@@ -46,7 +48,10 @@ optional arguments:
                         mode
   --size                units are in bytes used by files, cannot be combined
                         with count mode
+```
+#`checkFileOwners.py`
 
+```plain
 goal: check for file count by owner
 
 usage: checkFileOwners.py [-h] -S SEARCH -u UID [-c CRITICAL] [-w WARNING]
@@ -75,9 +80,7 @@ optional arguments:
                         mode
   --size                units are in bytes used by files, cannot be combined
                         with count mode
-=======
-Even More Nagios Plugins
-========================
+```
 
 License:
 - Apache 2.0 License for original work (i.e non-sub moduled)
@@ -85,4 +88,3 @@ License:
 
 
 PROVIDED AS IS AND WITHOUT WARRANTY
->>>>>>> very early commit ; more of a proof of concept code stash than a real commit
