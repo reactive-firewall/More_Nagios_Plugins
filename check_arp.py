@@ -4,7 +4,7 @@
 DEFAULT_MAC_ADDR='ff:ff:ff:ff:ff:ff'
 
 import argparse
-
+# add to function
 parser = argparse.ArgumentParser(description='check for an arp entry')
 parser.add_argument('-M', '--mac', default=DEFAULT_MAC_ADDR, help='check for an exact MAC')
 parser.add_argument('-H', '--host', required=True, help='check for an exact IP')
@@ -43,7 +43,8 @@ def compactList(list, intern_func=None):
        seen[marker] = 1
        result.append(item)
    return result
-	
+
+# make main function	
 args = parser.parse_args()
 test_MAC = (args.mac).lower()
 if (test_MAC is None):
@@ -61,6 +62,7 @@ if test_IP is not None:
 	if theResult is not None:
 		theMAC = extractMACAddr(theResult)
 		if (theMAC is None) and (len(theMAC) is 0):
+			# too complex move to function
 			if test_is_critical is True:
 				print "ARP CRITICAL - "+str(theMAC)
 				exit(2)
@@ -75,6 +77,7 @@ if test_IP is not None:
 				exit(1)
 		elif (theMAC is not None) and (len(theMAC) > 0) and (theMAC[0] is not None):
 			if (test_MAC != DEFAULT_MAC_ADDR) and (len(test_MAC) > 0) and (str(theMAC[0]).lower() != test_MAC):
+				# too complex move to function
 				if test_is_critical is True:
 					print "ARP CRITICAL - "+str(theMAC)
 					exit(2)
@@ -90,6 +93,7 @@ if test_IP is not None:
 			else:
 				print "ARP OK - "+str(theMAC[0])
 		else:
+			# too complex move to function
 			if test_is_critical is True:
 				print "ARP CRITICAL - EMPTY"
 				exit(2)
