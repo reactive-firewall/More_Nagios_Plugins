@@ -1,11 +1,13 @@
 #! /usr/bin/env python
 
+# update to PEP8 style
+
 # default values
 DEFAULT_SEARCH_ROOT='/'
 
 import argparse
 import os
-
+#move to function
 parser = argparse.ArgumentParser(description='check for file count by owner')
 parser.add_argument('-S', '--search', default=DEFAULT_SEARCH_ROOT, required=True, help='search path root to check')
 parser.add_argument('-u', '--uid', default=os.geteuid(), required=True, help='search for user owned files with this UID')
@@ -21,6 +23,7 @@ group_mode = parser.add_mutually_exclusive_group()
 group_mode.add_argument('--count', default=True, action='store_true', help='units are in file counts, cannot be combined with size mode')
 group_mode.add_argument('--size', default=False, action='store_true', help='units are in bytes used by files, cannot be combined with count mode')
 
+# move to function
 args = parser.parse_args()
 test_is_unsafe = args.unsafe
 test_is_safe = args.only_safe
@@ -31,13 +34,14 @@ critical_threshold = int(args.critical)
 warning_threshold = int(args.warning)
 count_mode = (args.count and (args.size != True))
 
-
+# move to function
 try:
 	search_uid = int(args.uid)
 except:
 	print "checkFileOwners: SYNTAX ERROR: UNKNOWN value "+str(args.uid)
 	exit(3)
 
+# check more cases
 if search_uid is None:
 	print "checkFileOwners: SYNTAX ERROR: UID can not be set to None!"
 	exit(3)
@@ -85,6 +89,7 @@ def getFileUIDCount(theUID, searchPath='.'):
 		for root, dirs, files in os.walk(searchPath, True, None, True):
 			try:	
 				for name in files:
+					#add checks here for is still file
 					if ( theUID == getFileUID( os.path.join(root, name) ) ):
 						theResult = theResult + 1;
 			except:
@@ -151,6 +156,6 @@ if search_uid is not None:
 			print "checkFileOwners WARNING - "+str(theCount)
 			exit(1)
 else:
-	print "ARP UNKNOWN"
+	print "CheckFileOwners UNKNOWN"
 	exit(3)
 exit(0)
