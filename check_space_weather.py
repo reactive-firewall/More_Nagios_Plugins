@@ -67,8 +67,17 @@ def extractRegexPattern(theInput_Str, theInputPattern):
 
 # get timestamps from file
 def extractTimes(theInputStr):
-#	return extractRegexPattern(theInputStr, "(?:(?:[\s\S]*){0,1}(?P<Timestamp>(?:[19|20]{2}[0-9]{2}\s+[0-2]{1}[0-9]{1}\s+(?:01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)\s+(?:00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24){1}(?:00|15|30|45){1})+)+(?:[\s\S]*){0,1})")
-	return extractRegexPattern(theInputStr, "(?P<Timestamp>(?:[19|20]{2}[0-9]{2}\s+[0-2]{1}[0-9]{1}\s+(?:01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)\s+(?:00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24){1}(?:00|15|30|45){1})+)+")[-2]
+	theResult = None
+#	return extractRegexPattern(theInputStr, "(?:(?P<Timestamp>(?:(?:[19|20]{2}[0-9]{2}\s+[0-2]{1}[0-9]{1}\s+(?:01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)\s+(?:00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24){1}(?:00|15|30|45){1})+\s*|(?:(?:[-]{1}[1]{1}){1}\s*){4}){1}){1}\s*|(?P<data_value>(?:[-]?[0-9]+[.0-9]+){1}){1})+")
+	try:
+		theResult = extractRegexPattern(theInputStr, "(?P<Timestamp>(?:(?:[19|20]{2}[0-9]{2}\s+[0-2]{1}[0-9]{1}\s+(?:01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)\s+(?:00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24){1}(?:00|15|30|45){1})+|(?:(?:[-]{1}[1]{1}){1}\s+){4}){1})+")[-3]
+	except Exception:
+		theResult = None
+	return theResult
+
+def extractKWing(theInputStr):
+	if extractTimes(theInputStr) is not None:
+		return extractRegexPattern(str(theInputStr).split(" ")[-1], "(?P<kindex>[-0-9]+[.0-9]*){1}")[-1]
 
 #def extractLastLine(theInputStr):
 
@@ -95,7 +104,11 @@ if (test_k_wing is True):
 	tmpName=str('/tmp/k_wing_data.txt')
 	if (os.path.isfile(tmpName) is not True):
 		getRemoteKWingData(tmpName)
-	print(extractTimes(readFile(tmpName)))
+	temp_value = readFile(tmpName).split("""\n""")
+	the_output = str("UNKNOWN: {kValue} | ").format(kValue=extractKWing(temp_value[-1]))
+	for someEvent in temp_value[:-2]:
+		the_output += str("time={timeString};;;;; kwing={kValue};5.00;6.00;0.00;U;\n").format(timeString=extractTimes(someEvent), kValue=extractKWing(someEvent))
+	print(the_output)
 	print(str("END"))
 else:
 	print "check_space_weather: SYNTAX ERROR: MAC can not be set to None!"
