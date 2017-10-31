@@ -66,7 +66,10 @@ def main(argv=[]):
 	test_is_inverted = args.empty_ok
 	if test_IP is not None:
 		import subprocess
-		theResult=subprocess.check_output(["arp", "-n", test_IP])
+		try:
+			theResult = subprocess.check_output(["arp", "-n", str(test_IP)])
+		except Exception:
+			theResult = "error"
 		if theResult is not None:
 			theMAC = extractMACAddr(theResult)
 			if (theMAC is None) and (len(theMAC) is 0):
