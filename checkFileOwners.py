@@ -124,36 +124,36 @@ def main(argv=[]):
 
 		if (theCount is None) or (theCount == 0):
 			if empty_is_NOT_ok is True:
-				print "checkFileOwners CRITICAL - 0"
+				print(str("checkFileOwners CRITICAL: {} has 0 files | uid_{}_FileCount={};0;0;0;U;").format(search_path, search_uid, theCount))
 				exit(2)
 			if empty_is_ok is True:
-				print "checkFileOwners OK - 0"
+				print(str("checkFileOwners OK: {} has 0 files | uid_{}_FileCount={};1;1;0;U;").format(search_path, search_uid, theCount))
 				exit(0)
 			else:
-				print "checkFileOwners WARNING - 0"
+				print(str("checkFileOwners WARNING: {the_path} has {file_count} files | uid_{the_uid}_FileCount={file_count};1;U;0;U;").format(the_path=search_path, the_uid=search_uid, file_count=theCount))
 				exit(1)
 		elif (theCount is not None) and (theCount > 0):
 			if ((theCount > critical_threshold) or (theCount >= warning_threshold)):
 				if (theCount >= critical_threshold):
-					print "checkFileOwners CRITICAL - "+str(theCount)
+					print(str("checkFileOwners CRITICAL: {the_path} has {file_count} files | uid_{the_uid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_uid=search_uid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 					exit(2)
 				else:
-					print "checkFileOwners WARNING - "+str(theCount)
+					print(str("checkFileOwners WARNING: {the_path} has {file_count} files | uid_{the_uid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_uid=search_uid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 					exit(1)
 			elif ((theCount > critical_threshold) or (theCount >= warning_threshold) is False):
-				print "checkFileOwners OK - "+str(theCount)
+				print(str("checkFileOwners OK: {the_path} has {file_count} files | uid_{the_uid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_uid=search_uid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 		else:
 			if empty_is_NOT_ok is True:
-				print "checkFileOwners CRITICAL - "+str(theCount)
+				print(str("checkFileOwners CRITICAL: {the_path} has {file_count} files | uid_{the_uid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_uid=search_uid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 				exit(2)
 			if empty_is_ok is True:
-				print "checkFileOwners OK - "+str(theCount)
+				print(str("checkFileOwners OK: {the_path} has {file_count} files | uid_{the_uid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_uid=search_uid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 				exit(0)
 			else:
-				print "checkFileOwners WARNING - "+str(theCount)
+				print(str("checkFileOwners WARNING: {the_path} has {file_count} files | uid_{the_uid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_uid=search_uid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 				exit(1)
 	else:
-		print "CheckFileOwners UNKNOWN"
+		print "CheckFileOwners UNKNOWN "
 		exit(3)
 	exit(0)
 
@@ -161,3 +161,4 @@ def main(argv=[]):
 if __name__ in '__main__':
 	import sys
 	main(sys.argv[1:])
+¨
