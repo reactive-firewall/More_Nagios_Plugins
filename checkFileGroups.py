@@ -1,58 +1,31 @@
 #! /usr/bin/env python
 
+# update to PEP8 style
+
 # default values
 DEFAULT_SEARCH_ROOT='/'
 
 import argparse
 import os
 
-parser = argparse.ArgumentParser(description='check for file count by owner')
-parser.add_argument('-S', '--search', default=DEFAULT_SEARCH_ROOT, required=True, help='search path root to check')
-parser.add_argument('-g', '--gid', default=os.getegid(), required=True, help='search for group owned files with this GID')
-parser.add_argument('-c', '--critical', default=6000, required=False, help='critical threshold in filecount or bytes')
-parser.add_argument('-w', '--warning', default=1000, required=False, help='warning threshold in filecount or bytes')
-group_empty = parser.add_mutually_exclusive_group()
-group_empty.add_argument('--empty-critical', default=False, action='store_true', help='return critical instead of warning on empty search path, overides cannot be combined with other reporting modes')
-group_empty.add_argument('--empty-ok', default=False, action='store_true', help='return ok on empty search path instead, cannot be combined with optionals')
-group_safe = parser.add_mutually_exclusive_group()
-group_safe.add_argument('--unsafe', default=False, action='store_true', help='allow unsafe ranges, overides some checks cannot be combined with safe mode')
-group_safe.add_argument('--only-safe', default=True, action='store_true', help='allow only safe ranges (default), force some checks cannot be combined with un-safe mode')
-group_mode = parser.add_mutually_exclusive_group()
-group_mode.add_argument('--count', default=True, action='store_true', help='units are in file counts, cannot be combined with size mode')
-group_mode.add_argument('--size', default=False, action='store_true', help='units are in bytes used by files, cannot be combined with count mode')
+def parseArgs(arguments=[]):
+	parser = argparse.ArgumentParser(description='check for file count by group')
+	parser.add_argument('-S', '--search', default=DEFAULT_SEARCH_ROOT, required=True, help='search path root to check')
+	parser.add_argument('-g', '--gid', default=os.getegid(), required=True, help='search for user owned files with this GID')
+	parser.add_argument('-c', '--critical', default=6000, required=False, help='critical threshold in filecount or bytes')
+	parser.add_argument('-w', '--warning', default=1000, required=False, help='warning threshold in filecount or bytes')
+	group_empty = parser.add_mutually_exclusive_group()
+	group_empty.add_argument('--empty-critical', default=False, action='store_true', help='return critical instead of warning on empty search path, overides cannot be combined with other reporting modes')
+	group_empty.add_argument('--empty-ok', default=False, action='store_true', help='return ok on empty search path instead, cannot be combined with optionals')
+	group_safe = parser.add_mutually_exclusive_group()
+	group_safe.add_argument('--unsafe', default=False, action='store_true', help='allow unsafe ranges, overides some checks cannot be combined with safe mode')
+	group_safe.add_argument('--only-safe', default=True, action='store_true', help='allow only safe ranges (default), force some checks cannot be combined with un-safe mode')
+	group_mode = parser.add_mutually_exclusive_group()
+	group_mode.add_argument('--count', default=True, action='store_true', help='units are in file counts, cannot be combined with size mode')
+	group_mode.add_argument('--size', default=False, action='store_true', help='units are in bytes used by files, cannot be combined with count mode')
+	args = parser.parse_args(arguments)
+	return args
 
-args = parser.parse_args()
-test_is_unsafe = args.unsafe
-test_is_safe = args.only_safe
-search_path = args.search
-empty_is_ok = args.empty_ok
-empty_is_NOT_ok = (args.empty_critical or (empty_is_ok))
-critical_threshold = int(args.critical)
-warning_threshold = int(args.warning)
-count_mode = (args.count and (args.size != True))
-
-
-try:
-	search_gid = int(args.gid)
-except:
-	print "checkFileGroups: SYNTAX ERROR: UNKNOWN value "+str(args.gid)
-	exit(3)
-
-if search_gid is None:
-	print "checkFileGroups: SYNTAX ERROR: GID can not be set to None!"
-	exit(3)
-elif ((search_gid < 0) and (test_is_unsafe is False)):
-	print "checkFileGroups: SYNTAX ERROR: GID can not be set to negitive! try --unsafe"
-	exit(3)
-elif ((int(search_gid) > 2147483647) and (test_is_unsafe is False)):
-	print "checkFileGroups: SYNTAX ERROR: GID "+str(search_gid)+" can not be set beyond the 32bit limit! try --unsafe"
-	exit(3)
-
-from os.path import join
-
-#test_is_critical = args.critical
-#test_is_unknown = args.empty_unknown
-#test_is_inverted = args.empty_ok
 
 def compactList(list, intern_func=None):
    if intern_func is None:
@@ -85,12 +58,13 @@ def getFileGIDCount(theGID, searchPath='.'):
 		for root, dirs, files in os.walk(searchPath, True, None, True):
 			try:	
 				for name in files:
+					#add checks here for is still file
 					if ( theGID == getFileGID( os.path.join(root, name) ) ):
 						theResult = theResult + 1;
 			except:
 				continue
 	except:
-		print "checkFileGroups UNKNOWN - "+str(searchPath)
+		print "checkFileOwners UNKNOWN - "+str(searchPath)
 		exit(3)
 	return theResult
 
@@ -105,51 +79,85 @@ def getFileGIDUsage(theGID, searchPath='.'):
 			except:
 				continue
 	except:
-		print "checkFileGroups UNKNOWN - "+str(searchPath)
+		print "checkFileOwners UNKNOWN - "+str(searchPath)
 		exit(3)
 	return theResult
 
-if search_path is None:
-	print "checkFileGroups: SYNTAX ERROR: MISSING path"
-	exit(1)
+def main(argv=[]):
+	args = parseArgs(argv)
+	test_is_unsafe = args.unsafe
+	test_is_safe = args.only_safe
+	search_path = args.search
+	empty_is_ok = args.empty_ok
+	empty_is_NOT_ok = (args.empty_critical or (empty_is_ok))
+	critical_threshold = int(args.critical)
+	warning_threshold = int(args.warning)
+	count_mode = (args.count and (args.size != True))
+	# move to function
+	try:
+		search_gid = int(args.gid)
+	except:
+		print "checkFileOwners: SYNTAX ERROR: UNKNOWN value "+str(args.gid)
+		exit(3)
+	if search_gid is None:
+		print "checkFileOwners: SYNTAX ERROR: GID can not be set to None!"
+		exit(3)
+	elif ((search_gid < 0) and (test_is_unsafe is False)):
+		print "checkFileOwners: SYNTAX ERROR: GID can not be set to negitive! try --unsafe"
+		exit(3)
+	elif ((int(search_gid) > 2147483647) and (test_is_unsafe is False)):
+		print "checkFileOwners: SYNTAX ERROR: GID "+str(search_gid)+" can not be set beyond the 32bit limit! try --unsafe"
+		exit(3)
+	from os.path import join
+	#test_is_critical = args.critical
+	#test_is_unknown = args.empty_unknown
+	#test_is_inverted = args.empty_ok
+	if search_path is None:
+		print "checkFileOwners: SYNTAX ERROR: MISSING path"
+		exit(1)
+	if search_gid is not None:
+		theCount = 0
+		if count_mode:
+			theCount = getFileGIDCount(search_gid, search_path)
+		else:
+			theCount = getFileGIDUsage(search_gid, search_path)
 
-if search_gid is not None:
-	theCount = 0
-	if count_mode:
-		theCount = getFileGIDCount(search_gid, search_path)
-	else:
-		theCount = getFileGIDUsage(search_gid, search_path)
-	if (theCount is None) or (theCount == 0):
-		if empty_is_NOT_ok is True:
-			print "checkFileGroups CRITICAL - 0"
-			exit(2)
-		if empty_is_ok is True:
-			print "checkFileGroups OK - 0"
-			exit(0)
-		else:
-			print "checkFileGroups WARNING - 0"
-			exit(1)
-	elif (theCount is not None) and (theCount > 0):
-		if (theCount > critical_threshold) or (theCount >= warning_threshold):
-			if (theCount >= critical_threshold):
-				print "checkFileGroups CRITICAL - "+str(theCount)
+		if (theCount is None) or (theCount == 0):
+			if empty_is_NOT_ok is True:
+				print(str("checkFileOwners CRITICAL: {} has 0 files | gid_{}_FileCount={};0;0;0;U;").format(search_path, search_gid, theCount))
 				exit(2)
+			if empty_is_ok is True:
+				print(str("checkFileOwners OK: {} has 0 files | gid_{}_FileCount={};1;1;0;U;").format(search_path, search_gid, theCount))
+				exit(0)
 			else:
-				print "checkFileGroups WARNING - "+str(theCount)
+				print(str("checkFileOwners WARNING: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};1;U;0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount))
 				exit(1)
+		elif (theCount is not None) and (theCount > 0):
+			if ((theCount > critical_threshold) or (theCount >= warning_threshold)):
+				if (theCount >= critical_threshold):
+					print(str("checkFileOwners CRITICAL: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+					exit(2)
+				else:
+					print(str("checkFileOwners WARNING: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+					exit(1)
+			elif ((theCount > critical_threshold) or (theCount >= warning_threshold) is False):
+				print(str("checkFileOwners OK: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 		else:
-			print "checkFileGroups OK - "+str(theCount)
+			if empty_is_NOT_ok is True:
+				print(str("checkFileOwners CRITICAL: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+				exit(2)
+			if empty_is_ok is True:
+				print(str("checkFileOwners OK: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+				exit(0)
+			else:
+				print(str("checkFileOwners WARNING: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+				exit(1)
 	else:
-		if empty_is_NOT_ok is True:
-			print "checkFileGroups CRITICAL - "+str(theCount)
-			exit(2)
-		if empty_is_ok is True:
-			print "checkFileGroups OK - "+str(theCount)
-			exit(0)
-		else:
-			print "checkFileGroups WARNING - "+str(theCount)
-			exit(1)
-else:
-	print "ARP UNKNOWN"
-	exit(3)
-exit(0)
+		print "CheckFileOwners UNKNOWN "
+		exit(3)
+	exit(0)
+
+
+if __name__ in '__main__':
+	import sys
+	main(sys.argv[1:])
