@@ -64,7 +64,7 @@ def getFileGIDCount(theGID, searchPath='.'):
 			except:
 				continue
 	except:
-		print "checkFileOwners UNKNOWN - "+str(searchPath)
+		print "GID checkFileGroups UNKNOWN - "+str(searchPath)
 		exit(3)
 	return theResult
 
@@ -79,7 +79,7 @@ def getFileGIDUsage(theGID, searchPath='.'):
 			except:
 				continue
 	except:
-		print "checkFileOwners UNKNOWN - "+str(searchPath)
+		print "GID checkFileGroups UNKNOWN - "+str(searchPath)
 		exit(3)
 	return theResult
 
@@ -97,23 +97,23 @@ def main(argv=[]):
 	try:
 		search_gid = int(args.gid)
 	except:
-		print "checkFileOwners: SYNTAX ERROR: UNKNOWN value "+str(args.gid)
+		print "GID checkFileGroups: SYNTAX ERROR: UNKNOWN value "+str(args.gid)
 		exit(3)
 	if search_gid is None:
-		print "checkFileOwners: SYNTAX ERROR: GID can not be set to None!"
+		print "GID checkFileGroups: SYNTAX ERROR: GID can not be set to None!"
 		exit(3)
 	elif ((search_gid < 0) and (test_is_unsafe is False)):
-		print "checkFileOwners: SYNTAX ERROR: GID can not be set to negitive! try --unsafe"
+		print "GID checkFileGroups: SYNTAX ERROR: GID can not be set to negitive! try --unsafe"
 		exit(3)
 	elif ((int(search_gid) > 2147483647) and (test_is_unsafe is False)):
-		print "checkFileOwners: SYNTAX ERROR: GID "+str(search_gid)+" can not be set beyond the 32bit limit! try --unsafe"
+		print "GID checkFileGroups: SYNTAX ERROR: GID "+str(search_gid)+" can not be set beyond the 32bit limit! try --unsafe"
 		exit(3)
 	from os.path import join
 	#test_is_critical = args.critical
 	#test_is_unknown = args.empty_unknown
 	#test_is_inverted = args.empty_ok
 	if search_path is None:
-		print "checkFileOwners: SYNTAX ERROR: MISSING path"
+		print "GID checkFileGroups: SYNTAX ERROR: MISSING path"
 		exit(1)
 	if search_gid is not None:
 		theCount = 0
@@ -124,33 +124,33 @@ def main(argv=[]):
 
 		if (theCount is None) or (theCount == 0):
 			if empty_is_NOT_ok is True:
-				print(str("checkFileOwners CRITICAL: {} has 0 files | gid_{}_FileCount={};0;0;0;U;").format(search_path, search_gid, theCount))
+				print(str("GID checkFileGroups CRITICAL: {} has 0 files | gid_{}_FileCount={};0;0;0;U;").format(search_path, search_gid, theCount))
 				exit(2)
 			if empty_is_ok is True:
-				print(str("checkFileOwners OK: {} has 0 files | gid_{}_FileCount={};1;1;0;U;").format(search_path, search_gid, theCount))
+				print(str("GID checkFileGroups OK: {} has 0 files | gid_{}_FileCount={};1;1;0;U;").format(search_path, search_gid, theCount))
 				exit(0)
 			else:
-				print(str("checkFileOwners WARNING: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};1;U;0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount))
+				print(str("GID checkFileGroups WARNING: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};1;U;0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount))
 				exit(1)
 		elif (theCount is not None) and (theCount > 0):
 			if ((theCount > critical_threshold) or (theCount >= warning_threshold)):
 				if (theCount >= critical_threshold):
-					print(str("checkFileOwners CRITICAL: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+					print(str("GID checkFileGroups CRITICAL: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 					exit(2)
 				else:
-					print(str("checkFileOwners WARNING: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+					print(str("GID checkFileGroups WARNING: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 					exit(1)
 			elif ((theCount > critical_threshold) or (theCount >= warning_threshold) is False):
-				print(str("checkFileOwners OK: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+				print(str("GID checkFileGroups OK: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 		else:
 			if empty_is_NOT_ok is True:
-				print(str("checkFileOwners CRITICAL: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+				print(str("GID checkFileGroups CRITICAL: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 				exit(2)
 			if empty_is_ok is True:
-				print(str("checkFileOwners OK: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+				print(str("GID checkFileGroups OK: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 				exit(0)
 			else:
-				print(str("checkFileOwners WARNING: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
+				print(str("GID checkFileGroups WARNING: {the_path} has {file_count} files | gid_{the_gid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_gid=search_gid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 				exit(1)
 	else:
 		print "CheckFileOwners UNKNOWN "
