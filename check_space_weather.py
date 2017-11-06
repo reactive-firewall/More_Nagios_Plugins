@@ -5,14 +5,17 @@
 
 import argparse
 
-parser = argparse.ArgumentParser(description='check for a space weather data entry')
-parser.add_argument('--k-wing', default=False, action='store_true', help='check the k-wing index')
-#parser.add_argument('-M', '--mac', default=DEFAULT_MAC_ADDR, help='check for an exact MAC')
-#parser.add_argument('-H', '--host', required=True, help='check for an exact IP')
-#group_empty = parser.add_mutually_exclusive_group()
-#group_empty.add_argument('-C', '--critical', default=False, action='store_true', help='return critical instead of warning on empty MAC, overides other empty values')
-#group_empty.add_argument('-U', '--empty-unknown', default=False, action='store_true', help='return unknown instead of warning on empty MAC')
-#group_empty.add_argument('--empty-ok', default=False, action='store_true', help='return ok on empty MAC instead, cannot be combined with optionals')
+def parseArgs(arguments=[]):
+	parser = argparse.ArgumentParser(description='check for a space weather data entry')
+	parser.add_argument('--k-wing', default=False, action='store_true', help='check the k-wing index')
+	#parser.add_argument('-M', '--mac', default=DEFAULT_MAC_ADDR, help='check for an exact MAC')
+	#parser.add_argument('-H', '--host', required=True, help='check for an exact IP')
+	#group_empty = parser.add_mutually_exclusive_group()
+	#group_empty.add_argument('-C', '--critical', default=False, action='store_true', help='return critical instead of warning on empty MAC, 	overides other empty values')
+	#group_empty.add_argument('-U', '--empty-unknown', default=False, action='store_true', help='return unknown instead of warning on empty MAC')
+	#group_empty.add_argument('--empty-ok', default=False, action='store_true', help='return ok on empty MAC instead, cannot be combined with optionals')
+	return parser.parse_args(arguments)
+
 
 def readFile(somefile):
 	import os
@@ -48,9 +51,13 @@ def writeFile(somefile, somedata):
 def getRemoteData(someURL, outFile):
 	"""Downloads the given URL data to the given file"""
 	import urllib
-	tempfile = urllib.FancyURLopener()
-	tempfile.retrieve(someURL, outFile)
-	return True
+	try:
+		tempfile = urllib.FancyURLopener()
+		tempfile.retrieve(someURL, outFile)
+		return True
+	except Exception:
+		return False
+	return False
 
 def getRemoteKWingData(outfile):
 	"""Downloads the space weather k-wing data to the given file"""
@@ -95,29 +102,32 @@ def compactList(list, intern_func=None):
        seen[marker] = 1
        result.append(item)
    return result
-	
-args = parser.parse_args()
-test_k_wing = (args.k_wing is not False)
-if (test_k_wing is True):
-	print(str("START"))
-	import os
-	tmpName=str('/tmp/k_wing_data.txt')
-	if (os.path.isfile(tmpName) is not True):
-		getRemoteKWingData(tmpName)
-	temp_value = readFile(tmpName).split("""\n""")
-	the_output = str("UNKNOWN: {kValue} | ").format(kValue=extractKWing(temp_value[-1]))
-	for someEvent in temp_value[:-2]:
-		the_output += str("time={timeString};;;;; kwing={kValue};5.00;6.00;0.00;U;\n").format(timeString=extractTimes(someEvent), kValue=extractKWing(someEvent))
-	print(the_output)
-	print(str("END"))
-else:
-	print "check_space_weather: SYNTAX ERROR: MAC can not be set to None!"
-	exit(3)
 
-#test_IP = args.host
-#test_is_critical = args.critical
-#test_is_unknown = args.empty_unknown
-#test_is_inverted = args.empty_ok
+def main(argv=[]):
+	args = parseArgs(argv)
+	test_k_wing = (args.k_wing is not False)
+	if (test_k_wing is True):
+		#print(str("START"))
+		import os
+		tmpName=str('/tmp/k_wing_data.txt')
+		if (os.path.isfile(tmpName) is not True):
+			if getRemoteKWingData(tmpName) is False:
+				exit(3)
+		temp_value = readFile(tmpName).split("""\n""")
+		the_output = str("UNKNOWN: {kValue} | ").format(kValue=extractKWing(temp_value[-1]))
+		for someEvent in temp_value[:-2]:
+			the_output += str("time={timeString};;;;; kwing={kValue};5.00;6.00;0.00;U;\n").format(timeString=extractTimes(someEvent), kValue=extractKWing(someEvent))
+		print(the_output)
+		#print(str("END"))
+	else:
+		print "check_space_weather: SYNTAX ERROR: MAC can not be set to None!"
+		exit(3)
+	#test_IP = args.host
+	#test_is_critical = args.critical
+	#test_is_unknown = args.empty_unknown
+	#test_is_inverted = args.empty_ok
+	exit(0)
 
-
-exit(0)
+if __name__ in '__main__':
+	import sys
+	main(sys.argv[1:])
