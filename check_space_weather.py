@@ -82,6 +82,19 @@ def extractTimes(theInputStr):
 		theResult = None
 	return theResult
 
+def convertTime(the_raw_time_data):
+	if the_raw_time_data is None or len(the_raw_time_data) < 11:
+		return str("UNKNOWN")
+	the_time_array = the_raw_time_data.split("\s+")
+	year = the_time_array[0]
+	month = the_time_array[1]
+	day = the_time_array[2]
+	hour = the_time_array[3]
+	minute = the_time_array[4]
+	seconds = time.mktime(tuple((year, month, day, hour, minute,0,0,0,0)))
+	return seconds
+
+
 def extractKWing(theInputStr):
 	if extractTimes(theInputStr) is not None:
 		return extractRegexPattern(str(theInputStr).split(" ")[-1], "(?P<kindex>[-0-9]+[.0-9]*){1}")[-1]
@@ -116,7 +129,7 @@ def main(argv=[]):
 		temp_value = readFile(tmpName).split("""\n""")
 		the_output = str("UNKNOWN: {kValue} | ").format(kValue=extractKWing(temp_value[-1]))
 		for someEvent in temp_value[:-2]:
-			the_output += str("time={timeString};;;;; kwing={kValue};5.00;6.00;0.00;U;\n").format(timeString=extractTimes(someEvent), kValue=extractKWing(someEvent))
+			the_output += str("time={timeString};;;;; kwing={kValue};5.00;6.00;0.00;U;\n").format(timeString=convertTime(extractTimes(someEvent)), kValue=extractKWing(someEvent))
 		print(the_output)
 		#print(str("END"))
 	else:
