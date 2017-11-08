@@ -4,8 +4,9 @@
 
 import argparse
 
+UNIT_OPTIONS = ["""b""", """bytes""", """K""", """kilobytes""", """M""", """megabytes""", """G""", """gigbytes"""]
 parser = argparse.ArgumentParser(description='check for an arp entry')
-parser.add_argument('-u', '--unit', default=u'b', choices=[u'b', u'bytes', u'K', u'kilobytes', u'M', u'megabytes', u'G', u'gigbytes'], help='the units')
+parser.add_argument('-u', '--unit', default=UNIT_OPTIONS[0], choices=UNIT_OPTIONS, help='the units')
 parser.add_argument('-C', '--critical', default=100, help='the critical threshold. (Min. Mem.)')
 parser.add_argument('-W', '--warn', default=1000, help='the warning threshold. ignored')
 parser.add_argument('-U', '--no-warn-on-used', dest='no_warn_used', default=True, action='store_false', help='ignores the warning on used < free.')
@@ -36,7 +37,10 @@ def compactList(list, intern_func=None):
 args = parser.parse_args()
 unit = args.unit
 test_used = args.no_warn_used
-crit_mem = int(args.critical, 10)
+if isinstance(args.critical, int):
+	crit_mem = args.critical
+else:
+	crit_mem = int(args.critical, 10)
 units = 1
 if unit.lower() in u'bytes':
 	units = 1
@@ -55,7 +59,10 @@ else:
 
 if units is not None:
 	import subprocess
-	theResult=subprocess.check_output(["free", str("-" + args.unit.lower()[0:1])])
+	try:
+		theResult=subprocess.check_output(["free", str("-{}").format(str(unit.lower())[0])])
+	except Exception:
+		theResult = None
 	if theResult is not None:
 		theValues = extractMemoryAddr(theResult)
 		if (theValues is not None):
