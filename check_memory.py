@@ -4,12 +4,14 @@
 
 import argparse
 
-UNIT_OPTIONS = ["""b""", """bytes""", """K""", """kilobytes""", """M""", """megabytes""", """G""", """gigbytes"""]
-parser = argparse.ArgumentParser(description='check for an arp entry')
-parser.add_argument('-u', '--unit', default=UNIT_OPTIONS[0], choices=UNIT_OPTIONS, help='the units')
-parser.add_argument('-C', '--critical', default=100, help='the critical threshold. (Min. Mem.)')
-parser.add_argument('-W', '--warn', default=1000, help='the warning threshold. ignored')
-parser.add_argument('-U', '--no-warn-on-used', dest='no_warn_used', default=True, action='store_false', help='ignores the warning on used < free.')
+def parseArgs(arguments=[]):
+	UNIT_OPTIONS = ["""b""", """bytes""", """K""", """kilobytes""", """M""", """megabytes""", """G""", """gigbytes"""]
+	parser = argparse.ArgumentParser(description='check for an arp entry')
+	parser.add_argument('-u', '--unit', default=UNIT_OPTIONS[0], choices=UNIT_OPTIONS, help='the units')
+	parser.add_argument('-C', '--critical', default=100, help='the critical threshold. (Min. Mem.)')
+	parser.add_argument('-W', '--warn', default=1000, help='the warning threshold. ignored')
+	parser.add_argument('-U', '--no-warn-on-used', dest='no_warn_used', default=True, action='store_false', help='ignores the warning on used < free.')
+	return parser.parse_args()
 
 def extractRegexPattern(theInput_Str, theInputPattern):
 	import re
@@ -34,7 +36,7 @@ def compactList(list, intern_func=None):
    return result
 
 
-args = parser.parse_args()
+args = parseArgs()
 unit = args.unit
 test_used = args.no_warn_used
 if isinstance(args.critical, int):
