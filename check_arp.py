@@ -5,6 +5,7 @@
 DEFAULT_MAC_ADDR = str("""ff:ff:ff:ff:ff:ff""")
 """The Default MAC address to check is all one bits, i.e. broadcast address."""
 
+
 import argparse
 
 
