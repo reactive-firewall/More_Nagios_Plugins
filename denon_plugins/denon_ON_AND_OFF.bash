@@ -1,13 +1,15 @@
 #! /bin/bash
 
-if [[ ( $(curl -fsSL -H 'DNT: 1' --tlsv1.2 --url "http://${HOST_TARGET:-10.0.1.114}/index.asp" 2>/dev/null 3>/dev/null | fgrep "MAIN ZONE" | fgrep "Status" | fgrep -o "img/Power_OFF.gif" | wc -l ) -gt 0 ) ]] ; then 
+HOST_TARGET=${1}
 
-curl 'http://10.0.1.114/MainZone/index.put.asp' \
+if [[ ( $(curl -fsSL -H 'DNT: 1' --tlsv1.2 --url "http://${HOST_TARGET}/index.asp" 2>/dev/null 3>/dev/null | fgrep "MAIN ZONE" | fgrep "Status" | fgrep -o "img/Power_OFF.gif" | wc -l ) -gt 0 ) ]] ; then 
+
+curl 'http://${HOST_TARGET}MainZone/index.put.asp' \
 -XPOST \
--H 'Referer: http://10.0.1.114/MainZone/index.html' \
+-H 'Referer: http://${HOST_TARGET}/MainZone/index.html' \
 -H 'Content-Type: application/x-www-form-urlencoded' \
--H 'Origin: http://10.0.1.114' \
--H 'Host: 10.0.1.114' \
+-H 'Origin: http://${HOST_TARGET}' \
+-H 'Host: ${HOST_TARGET}' \
 -H 'Connection: close' \
 -H 'Accept-Language: en-us' \
 -H 'DNT: 1' \
@@ -18,14 +20,14 @@ curl 'http://10.0.1.114/MainZone/index.put.asp' \
 
 fi
 
-if [[ ( $(curl -fsSL -H 'DNT: 1' --tlsv1.2 --url "http://${HOST_TARGET:-10.0.1.114}/index.asp" 2>/dev/null 3>/dev/null | fgrep "MAIN ZONE" | fgrep "Status" | fgrep -o "img/Power.gif" | wc -l ) -gt 0 ) ]] ; then 
+if [[ ( $(curl -fsSL -H 'DNT: 1' --tlsv1.2 --url "http://${HOST_TARGET}/index.asp" 2>/dev/null 3>/dev/null | fgrep "MAIN ZONE" | fgrep "Status" | fgrep -o "img/Power.gif" | wc -l ) -gt 0 ) ]] ; then 
 
 curl 'http://${HOST_TARGET:-10.0.1.114}/MainZone/index.put.asp' \
 -XPOST \
--H 'Referer: http://${HOST_TARGET:-10.0.1.114}/MainZone/index.html' \
+-H 'Referer: http://${HOST_TARGET}/MainZone/index.html' \
 -H 'Content-Type: application/x-www-form-urlencoded' \
--H 'Origin: http://${HOST_TARGET:-10.0.1.114}' \
--H 'Host: ${HOST_TARGET:-10.0.1.114}' \
+-H 'Origin: http://${HOST_TARGET}' \
+-H 'Host: ${HOST_TARGET}' \
 -H 'Connection: close' \
 -H 'Accept-Language: en-us' \
 -H 'DNT: 1' \
