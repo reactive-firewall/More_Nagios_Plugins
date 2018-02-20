@@ -161,9 +161,7 @@ class BasicUsageTestSuite(unittest.TestCase):
 						str(thepython),
 						str("-m"),
 						str("{}").format(
-							str(
-								test_case
-							)
+							str(test_case)
 						),
 						str("--help")
 					]
