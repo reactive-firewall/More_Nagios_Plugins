@@ -24,31 +24,30 @@ import sys
 
 
 def getPythonCommand():
-	"""Function for backend python command with cross-python coverage support."""
-	thepython = "exit 1 ; #"
-	try:
-		thepython = checkPythonCommand(["which", "coverage"])
-		if (str("/coverage") in str(thepython)) and (sys.version_info >= (3, 3)):
-			thepython = str("coverage run -p")
-		elif (str("/coverage") in str(thepython)) and (sys.version_info <= (3, 2)):
-			try:
-				import coverage
-				if coverage.__name__ is not None:
-					thepython = str("{} -m coverage run -p").format(str(sys.executable))
-				else:
-					thepython = str(sys.executable)
-			except Exception:
-				thepython = str(sys.executable)
-		else:
-			thepython = str(sys.executable)
-	except Exception:
-		thepython = "exit 1 ; #"
-		try:
-			thepython = str(sys.executable)
-		except Exception:
-			thepython = "exit 1 ; #"
-	return str(thepython)
-
+        """function for backend python command"""
+        thepython = "exit 1 ; #"
+        try:
+                thepython = checkPythonCommand(["which", "coverage"])
+                if (str("/coverage") in str(thepython)) and (sys.version_info >= (3, 3)):
+                        thepython = str("coverage run -p")
+                elif (str("/coverage") in str(thepython)) and (sys.version_info <= (3, 2)):
+                        try:
+                                import coverage
+                                if coverage.__name__ is not None:
+                                        thepython = str("{} -m coverage run -p").format(str(sys.executable))
+                                else:
+                                        thepython = str(sys.executable)
+                        except Exception:
+                                thepython = str(sys.executable)
+                else:
+                        thepython = str(sys.executable)
+        except Exception:
+                thepython = "exit 1 ; #"
+                try:
+                        thepython = str(sys.executable)
+                except Exception:
+                        thepython = "exit 1 ; #"
+        return str(thepython)
 
 def checkPythonCommand(args=[None], stderr=None):
 	"""Function for backend subprocess check_output command like testing with coverage support"""
