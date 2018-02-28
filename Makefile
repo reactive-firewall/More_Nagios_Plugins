@@ -99,6 +99,8 @@ cleanup:
 	$(QUIET)rm -Rf tests/__pycache__ 2>/dev/null || true
 	$(QUIET)rm -f *.pyc 2>/dev/null || true
 	$(QUIET)rm -f *.DS_Store 2>/dev/null || true
+	$(QUIET)rm -f .DS_Store 2>/dev/null || true
+	$(QUIET)rm -f ./*/.DS_Store 2>/dev/null || true
 	$(QUIET)rm -f ./*/*~ 2>/dev/null || true
 	$(QUIET)rm -f ./*~ 2>/dev/null || true
 	$(QUIET)coverage erase 2>/dev/null || true

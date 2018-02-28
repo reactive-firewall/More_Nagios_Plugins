@@ -3,7 +3,7 @@
 
 # From Python Repo Template for More Nagios Plugins repo
 # ..................................
-# Copyright (c) 2016-2017, Kendrick Walls
+# Copyright (c) 2016-2018, Kendrick Walls
 # ..................................
 # Licensed under MIT (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,6 +21,14 @@ import unittest
 import subprocess
 import sys
 #import profiling as profiling
+
+def getThisPythonCommand():
+        thepython = "exit 1 ; #"
+        try:
+            thepython = str(sys.executable)
+        except Exception:
+            thepython = "exit 1 ; #"
+        return str(thepython)
 
 
 def getPythonCommand():
@@ -42,11 +50,9 @@ def getPythonCommand():
                 else:
                         thepython = str(sys.executable)
         except Exception:
-                thepython = "exit 1 ; #"
-                try:
-                        thepython = str(sys.executable)
-                except Exception:
-                        thepython = "exit 1 ; #"
+                thepython = getThisPythonCommand()
+        if thepython is None:
+                thepython = getThisPythonCommand()
         return str(thepython)
 
 def checkPythonCommand(args=[None], stderr=None):
