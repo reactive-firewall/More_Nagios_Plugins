@@ -62,7 +62,7 @@ matrix:
   - os: osx
     osx_image: xcode9
     language: generic
-  allow_failure:
+  allow_failures:
   - os: osx
     osx_image: xcode6.4
     language: generic
