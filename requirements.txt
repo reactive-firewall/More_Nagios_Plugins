@@ -1,3 +1,9 @@
 coverage>=4.4
 codecov>=2.0.9
-re>=2.2.1
+argparse>=1.4.0
+setuptools>=36.5.0
+virtualenv>=15.0.1
+six>=1.0.0
+tox>=2.9.0
+pip>=9.0
+requests>=2.14.2
