@@ -49,7 +49,7 @@ def getFileUID(fqfp ='.'):
 		stats = os.lstat(fqfp)
 		theResult = stats.st_uid
 	except:
-		print "Unable to get UID"
+		print("Unable to get UID")
 	return theResult
 
 def getFileUIDCount(theUID, searchPath='.'):
@@ -64,7 +64,7 @@ def getFileUIDCount(theUID, searchPath='.'):
 			except:
 				continue
 	except:
-		print "checkFileOwners UNKNOWN - "+str(searchPath)
+		print("checkFileOwners UNKNOWN - "+str(searchPath))
 		exit(3)
 	return theResult
 
@@ -79,7 +79,7 @@ def getFileUIDUsage(theUID, searchPath='.'):
 			except:
 				continue
 	except:
-		print "checkFileOwners UNKNOWN - "+str(searchPath)
+		print("checkFileOwners UNKNOWN - "+str(searchPath))
 		exit(3)
 	return theResult
 
@@ -97,23 +97,23 @@ def main(argv=[]):
 	try:
 		search_uid = int(args.uid)
 	except:
-		print "checkFileOwners: SYNTAX ERROR: UNKNOWN value "+str(args.uid)
+		print("checkFileOwners: SYNTAX ERROR: UNKNOWN value "+str(args.uid))
 		exit(3)
 	if search_uid is None:
-		print "checkFileOwners: SYNTAX ERROR: UID can not be set to None!"
+		print("checkFileOwners: SYNTAX ERROR: UID can not be set to None!")
 		exit(3)
 	elif ((search_uid < 0) and (test_is_unsafe is False)):
-		print "checkFileOwners: SYNTAX ERROR: UID can not be set to negitive! try --unsafe"
+		print("checkFileOwners: SYNTAX ERROR: UID can not be set to negitive! try --unsafe")
 		exit(3)
 	elif ((int(search_uid) > 2147483647) and (test_is_unsafe is False)):
-		print "checkFileOwners: SYNTAX ERROR: UID "+str(search_uid)+" can not be set beyond the 32bit limit! try --unsafe"
+		print("checkFileOwners: SYNTAX ERROR: UID "+str(search_uid)+" can not be set beyond the 32bit limit! try --unsafe")
 		exit(3)
 	from os.path import join
 	#test_is_critical = args.critical
 	#test_is_unknown = args.empty_unknown
 	#test_is_inverted = args.empty_ok
 	if search_path is None:
-		print "checkFileOwners: SYNTAX ERROR: MISSING path"
+		print("checkFileOwners: SYNTAX ERROR: MISSING path")
 		exit(1)
 	if search_uid is not None:
 		theCount = 0
@@ -153,7 +153,7 @@ def main(argv=[]):
 				print(str("checkFileOwners WARNING: {the_path} has {file_count} files | uid_{the_uid}_FileCount={file_count};{warn};{crit};0;U;").format(the_path=search_path, the_uid=search_uid, file_count=theCount, warn=warning_threshold, crit=critical_threshold))
 				exit(1)
 	else:
-		print "CheckFileOwners UNKNOWN "
+		print("CheckFileOwners UNKNOWN ")
 		exit(3)
 	exit(0)
 

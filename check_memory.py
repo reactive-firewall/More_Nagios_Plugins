@@ -12,7 +12,7 @@ def parseArgs(arguments=[]):
 	parser.add_argument('-C', '--critical', default=100, help='the critical threshold. (Min. Mem.)')
 	parser.add_argument('-W', '--warn', default=1000, help='the warning threshold. ignored')
 	parser.add_argument('-U', '--no-warn-on-used', dest='no_warn_used', default=True, action='store_false', help='ignores the warning on used < free.')
-	return parser.parse_args()
+	return parser.parse_args(arguments)
 
 
 def extractRegexPattern(theInput_Str, theInputPattern):
@@ -40,7 +40,7 @@ def compactList(list, intern_func=None):
    return result
 
 
-def main(argv=None)
+def main(argv=None):
 	args = parseArgs(argv)
 	unit = args.unit
 	test_used = args.no_warn_used
@@ -90,13 +90,13 @@ def main(argv=None)
 					print(str("MEMORY {} | free={};{};{};0;{}").format("WARNING. Low MEMORY.", free_mem, used_mem, crit_mem, total_mem))
 					exit(1)
 				else:
-					print "MEMORY UNKNOWN"
+					print("MEMORY UNKNOWN")
 					exit(3)
 			else:
-				print "MEMORY UNKNOWN. An Error Occured."
+				print("MEMORY UNKNOWN. An Error Occured.")
 				exit(5)
 		else:
-			print "MEMORY UNKNOWN"
+			print("MEMORY UNKNOWN")
 			exit(3)
 	exit(3)
 
@@ -104,3 +104,4 @@ def main(argv=None)
 if __name__ in '__main__':
 	import sys
 	main(sys.argv[1:])
+	exit(5)

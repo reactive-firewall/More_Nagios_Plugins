@@ -12,7 +12,7 @@ def parseArgs(arguments=[]):
 	parser.add_argument('-C', '--critical', default=25, help='the critical threshold. (Min. Mem.)')
 	parser.add_argument('-W', '--warn', default=24, help='the warning threshold. ignored')
 	parser.add_argument('-H', '--host', help='the host ip to check')
-	return parser.parse_args()
+	return parser.parse_args(arguments)
 
 
 def extractRegexPattern(theInput_Str, theInputPattern):
@@ -60,7 +60,7 @@ def main(argv=None):
 					print(str("TEMPERATURE {}: Comfortable. | temp={};{};{};;").format("OK.", theValues, (crit_tmp - 2), crit_tmp, 100))
 					exit(0)
 				elif (theValues >= crit_tmp):
-					print(str("TEMPERATURE {}: Uncomfortable. | temp={};{};{};;").format("CRITICAL.", theValues, (crit_tmp - 2),, crit_tmp, 100))
+					print(str("TEMPERATURE {}: Uncomfortable. | temp={};{};{};;").format("CRITICAL.", theValues, (crit_tmp - 2), crit_tmp, 100))
 					exit(2)
 				else:
 					print "TEMPERATURE UNKNOWN: No Data."

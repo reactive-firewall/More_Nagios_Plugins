@@ -76,50 +76,50 @@ def main(argv=[]):
 			if (theMAC is None) and (len(theMAC) is 0):
 				# too complex move to function
 				if test_is_critical is True:
-					print "ARP CRITICAL - "+str(theMAC)
+					print("ARP CRITICAL - "+str(theMAC))
 					exit(2)
 				if test_is_unknown is True:
-					print "ARP UNKNOWN - "+str(theMAC)
+					print("ARP UNKNOWN - "+str(theMAC))
 					exit(3)
 				if test_is_inverted is True:
-					print "ARP OK - "+str(theMAC)
+					print("ARP OK - "+str(theMAC))
 					exit(0)
 				else:
-					print "ARP WARNING - "+str(theMAC)
+					print("ARP WARNING - "+str(theMAC))
 				exit(1)
 			elif (theMAC is not None) and (len(theMAC) > 0) and (theMAC[0] is not None):
 				if (test_MAC != DEFAULT_MAC_ADDR) and (len(test_MAC) > 0) and (str(theMAC[0]).lower() != test_MAC):
 					# too complex move to function
 					if test_is_critical is True:
-						print "ARP CRITICAL - "+str(theMAC)
+						print("ARP CRITICAL - "+str(theMAC))
 						exit(2)
 					if test_is_unknown is True:
-						print "ARP UNKNOWN - "+str(theMAC)
+						print("ARP UNKNOWN - "+str(theMAC))
 						exit(3)
 					if test_is_inverted is True:
-						print "ARP OK - "+str(theMAC)
+						print("ARP OK - "+str(theMAC))
 						exit(0)
 					else:
-						print "ARP WARNING - "+str(theMAC)
+						print("ARP WARNING - "+str(theMAC))
 						exit(1)
 				else:
-					print "ARP OK - "+str(theMAC[0])
+					print("ARP OK - "+str(theMAC[0]))
 			else:
 				# too complex move to function
 				if test_is_critical is True:
-					print "ARP CRITICAL - EMPTY"
+					print("ARP CRITICAL - EMPTY")
 					exit(2)
 				if test_is_unknown is True:
-					print "ARP UNKNOWN"
+					print("ARP UNKNOWN")
 					exit(3)
 				if test_is_inverted is True:
-					print "ARP OK - EMPTY"
+					print("ARP OK - EMPTY")
 					exit(0)
 				else:
-					print "ARP WARNING - EMPTY"
+					print("ARP WARNING - EMPTY")
 					exit(1)
 		else:
-			print "ARP UNKNOWN"
+			print("ARP UNKNOWN")
 			exit(3)
 	exit(0)
 

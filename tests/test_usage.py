@@ -161,7 +161,7 @@ class BasicUsageTestSuite(unittest.TestCase):
 		thepython = getPythonCommand()
 		if (thepython is not None):
 			try:
-				for test_case in ["check_arp", "checkFileOwners", "checkFileGroups"]:
+				for test_case in ["check_arp", "checkFileOwners", "checkFileGroups", "check_memory"]:
 					args = [
 						str(thepython),
 						str("-m"),
@@ -172,19 +172,19 @@ class BasicUsageTestSuite(unittest.TestCase):
 					]
 					theOutputtext = checkPythonCommand(args, stderr=subprocess.STDOUT)
 					# now test it
-					try:
-						if isinstance(theOutputtext, bytes):
-							theOutputtext = theOutputtext.decode('utf8')
-					except UnicodeDecodeError:
-						theOutputtext = str(repr(bytes(theOutputtext)))
-					if (str(theOutputtext) is not None):
+					if (theOutputtext is not None):
+						try:
+							if isinstance(theOutputtext, bytes):
+								theOutputtext = theOutputtext.decode('utf8')
+						except UnicodeDecodeError:
+							theOutputtext = str(repr(bytes(theOutputtext)))
 						theResult = True
 					else:
 						theResult = False
 						print(str(""))
 						print(str("python exe is {}").format(str(sys.executable)))
 						print(str("python cmd used is {}").format(str(thepython)))
-						print(str("arguments used were {}").format(str(thepython)))
+						print(str("arguments used were {}").format(str(args)))
 						print(str(""))
 						print(str("actual output was..."))
 						print(str(""))
@@ -194,9 +194,12 @@ class BasicUsageTestSuite(unittest.TestCase):
 					self.assertIsNotNone(theOutputtext)
 			except Exception as err:
 				print(str(""))
-				print(str(type(err)))
-				print(str(err))
-				print(str((err.args)))
+				print(str("python exe is {}").format(str(sys.executable)))
+				print(str("arguments used were {}").format(str(thepython)))
+				print(str(""))
+				print(str("actual error was..."))
+				print(str(""))
+				print(str("{} with args {}").format(str(err),str(err.args)))
 				print(str(""))
 				err = None
 				del err
