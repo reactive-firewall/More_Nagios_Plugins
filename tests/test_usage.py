@@ -161,7 +161,12 @@ class BasicUsageTestSuite(unittest.TestCase):
 		thepython = getPythonCommand()
 		if (thepython is not None):
 			try:
-				for test_case in ["check_arp", "checkFileOwners", "checkFileGroups", "check_memory"]:
+				check_commands = [
+						"check_arp", "checkFileOwners",
+						"checkFileGroups", "check_memory"
+						]
+				for test_case in check_commands:
+
 					args = [
 						str(thepython),
 						str("-m"),
