@@ -76,50 +76,50 @@ def main(argv=[]):
 			if (theMAC is None) and (len(theMAC) is 0):
 				# too complex move to function
 				if test_is_critical is True:
-					print("ARP CRITICAL - "+str(theMAC))
+					print(str("ARP CRITICAL: {} | arp_entry={};0;0;0;U;").format(str(theMAC), 0))
 					exit(2)
 				if test_is_unknown is True:
-					print("ARP UNKNOWN - "+str(theMAC))
+					print(str("ARP UNKNOWN: {} | arp_entry={};U;U;U;U;").format(str(theMAC), str("U")))
 					exit(3)
 				if test_is_inverted is True:
-					print("ARP OK - "+str(theMAC))
+					print(str("ARP OK: {} | arp_entry={};1;1;0;U;").format(str(theMAC), 0))
 					exit(0)
 				else:
-					print("ARP WARNING - "+str(theMAC))
+					print(str("ARP WARNING: {} | arp_entry={};0;0;0;U;").format(str(theMAC), 0))
 				exit(1)
 			elif (theMAC is not None) and (len(theMAC) > 0) and (theMAC[0] is not None):
 				if (test_MAC != DEFAULT_MAC_ADDR) and (len(test_MAC) > 0) and (str(theMAC[0]).lower() != test_MAC):
 					# too complex move to function
 					if test_is_critical is True:
-						print("ARP CRITICAL - "+str(theMAC))
+						print(str("ARP CRITICAL: {} | arp_entry={};1;2;0;U;").format(str(theMAC), 2))
 						exit(2)
 					if test_is_unknown is True:
-						print("ARP UNKNOWN - "+str(theMAC))
+						print(str("ARP UNKNOWN: {} | arp_entry={};U;U;0;U;").format(str(theMAC), 2))
 						exit(3)
 					if test_is_inverted is True:
-						print("ARP OK - "+str(theMAC))
+						print(str("ARP OK: {} | arp_entry={};1;2;0;U;").format(str(theMAC), 2))
 						exit(0)
 					else:
-						print("ARP WARNING - "+str(theMAC))
+						print(str("ARP WARNING: {} | arp_entry={};2;U;0;U;").format(str(theMAC), 2))
 						exit(1)
 				else:
-					print("ARP OK - "+str(theMAC[0]))
+					print(str("ARP OK: {} | arp_entry={};2;2;0;U;").format(str(theMAC), 1))
 			else:
 				# too complex move to function
 				if test_is_critical is True:
-					print("ARP CRITICAL - EMPTY")
+					print(str("ARP CRITICAL: {} is EMPTY | arp_entry={};0;0;U;U;").format(str(theMAC), 0))
 					exit(2)
 				if test_is_unknown is True:
-					print("ARP UNKNOWN")
+					print(str("ARP UNKNOWN: {} is EMPTY | arp_entry={};U;U;U;U;").format(str(theMAC), 0))
 					exit(3)
 				if test_is_inverted is True:
-					print("ARP OK - EMPTY")
+					print(str("ARP OK: {} is EMPTY | arp_entry={};1;2;0;U;").format(str(theMAC), 0))
 					exit(0)
 				else:
-					print("ARP WARNING - EMPTY")
+					print(str("ARP WARNING: {} is EMPTY | arp_entry={};0;1;U;U;").format(str(theMAC), 0))
 					exit(1)
 		else:
-			print("ARP UNKNOWN")
+			print(str("ARP UNKNOWN: {} | arp_entry={};U;U;U;U;").format(str(theMAC), str("U")))
 			exit(3)
 	exit(0)
 
