@@ -1,8 +1,15 @@
 #! /usr/bin/env python
 
-"""Rough draft of python implementation of the check_memory monitoring plugin. Advantage: removes need for nagios perl libs. THIS NEEDS TO BE CLEANED UP A BIT BEFORE it is anywhere near prod ready. It should work as PoC on debian with the curl util installed."""
+"""Rough draft of python implementation of the check_memory monitoring plugin. Advantage: removes need for nagios perl libs. THIS NEEDS TO BE CLEANED UP A BIT BEFORE it is anywhere near prod ready. It should work as PoC on debian/darwin with the curl util installed."""
 
 import argparse
+
+
+CHECK_MODE = dict({"temp":"value_temperature", "brightness":"value_brightness", "res":"value_resolution", "contract":"value_contract"})
+"""The Mode to check: temp, brightness, resolution, etc."""
+
+
+CHECK_DEFAULT = "temp"
 
 
 def parseArgs(arguments=[]):
@@ -11,6 +18,7 @@ def parseArgs(arguments=[]):
 	parser.add_argument('-u', '--unit', default=UNIT_OPTIONS[0], choices=UNIT_OPTIONS, help='the units')
 	parser.add_argument('-C', '--critical', default=25, help='the critical threshold. (Min. Mem.)')
 	parser.add_argument('-W', '--warn', default=24, help='the warning threshold. ignored')
+	parser.add_argument('-M', '--mode', dest='check_mode', choices=CHECK_MODE.keys(), default=CHECK_DEFAULT, help='the setting to check')
 	parser.add_argument('-H', '--host', help='the host ip to check')
 	return parser.parse_args(arguments)
 
@@ -45,12 +53,13 @@ def main(argv=None):
 		crit_tmp = int(args.critical, 10)
 	units = 1
 	the_host = args.host
+	the_cmd = CHECK_MODE[args.check_mode]
 	temp_c = None
 	if units is not None:
 		import subprocess
 		import os
 		try:
-			theResult=subprocess.check_output(["curl", "-fsSLk", "--header", "\'Dnt: 1\'", "--url", str("http://{}/?action=command&command=value_temperature").format(the_host)])
+			theResult=subprocess.check_output(["curl", "-fsSLk", "--header", "\'Dnt: 1\'", "--url", str("http://{}/?action=command&command={}").format(the_host, the_cmd)])
 		except Exception:
 			theResult = None
 		if theResult is not None:
