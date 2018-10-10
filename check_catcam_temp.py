@@ -50,16 +50,16 @@ def main(argv=None):
 		import subprocess
 		import os
 		try:
-			theResult=subprocess.check_output(["curl", "-fsSLk", "--url", str("http://{}/?action=command&command=value_temperature").format(the_host)])
+			theResult=subprocess.check_output(["curl", "-fsSLk", "--header", "\'Dnt: 1\'", "--url", str("http://{}/?action=command&command=value_temperature").format(the_host)])
 		except Exception:
 			theResult = None
 		if theResult is not None:
 			theValues = theResult.split(" ")[-1]
 			if (theValues is not None):
-				if (theValues < crit_tmp):
+				if (int(theValues) < int(crit_tmp)):
 					print(str("TEMPERATURE {}: Comfortable. | temp={};{};{};;").format("OK.", theValues, (crit_tmp - 2), crit_tmp, 100))
 					exit(0)
-				elif (theValues >= crit_tmp):
+				elif (int(theValues) >= int(crit_tmp)):
 					print(str("TEMPERATURE {}: Uncomfortable. | temp={};{};{};;").format("CRITICAL.", theValues, (crit_tmp - 2), crit_tmp, 100))
 					exit(2)
 				else:
